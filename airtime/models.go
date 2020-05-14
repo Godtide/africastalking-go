@@ -1,20 +1,20 @@
 package airtime
 
-// Response is the reponse from the api
+// Response is the response from the api
 type Response struct {
-	NumSent       int
-	TotalAmount   string
-	TotalDiscount string
-	ErrorMessage  string
-	Responses     []Entry
+	NumSent       int     `json:"numSent"`
+	TotalAmount   string  `json:"totalAmount"`
+	TotalDiscount string  `json:"totalDiscount"`
+	ErrorMessage  string  `json:"errorMessage"`
+	Responses     []Entry `json:"responses"`
 }
 
 // Entry is the entry for each airtime response
 type Entry struct {
-	ErrorMessage string
-	PhoneNumber  string
-	Amount       string
-	Discount     string
-	Status       string
-	RequestID    string
+	ErrorMessage string `json:"errorMessage"`
+	PhoneNumber  string `json:"phoneNumber"`
+	Amount       string `json:"amount"`
+	Discount     string `json:"discount"`
+	Status       string `json:"status"`
+	RequestID    string `json:"requestId"`
 }
