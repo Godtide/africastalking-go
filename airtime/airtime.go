@@ -3,7 +3,6 @@ package airtime
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/AndroidStudyOpenSource/africastalking-go/util"
 	"net/http"
 	"net/url"
@@ -43,41 +42,13 @@ func NewService(username, apiKey, env string) Service {
 	return Service{username, apiKey, env}
 }
 
-// Send sends a new airtime request
-func (service Service) Send() (*Response, error) {
-	host := util.GetAPIHost(service.Env)
-	url := host + "/version1/airtime"
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("unable to create request %v", err)
-	}
-
-	values := request.URL.Query()
-	values.Add("username", service.Username)
-	request.URL.RawQuery = values.Encode()
-
-	request.Header.Set("apikey", service.APIKey)
-	request.Header.Set("Accept", "application/json")
-
-	client := &http.Client{Timeout: 10 * time.Second}
-	response, err := client.Do(request)
-	if err != nil {
-		return nil, fmt.Errorf("could not get rsponse %v", err)
-	}
-	defer response.Body.Close()
-
-	var airtimeResponse Response
-	json.NewDecoder(response.Body).Decode(&airtimeResponse)
-	return &airtimeResponse, nil
-}
-
-func (service Service) SendAirtime(phoneNumber, amount string) (*Response, error) {
+func (service Service) Send(phoneNumber, amount string) (*Response, error) {
 	values := url.Values{}
 	values.Set("username", service.Username)
 	values.Set("phoneNumber", phoneNumber)
 	values.Set("amount", amount)
 
-	smsURL := util.GetSmsURL(service.Env)
+	smsURL := util.GetAirtimeURL(service.Env)
 	headers := make(map[string]string)
 	headers["Content-Type"] = "application/x-www-form-urlencoded"
 
