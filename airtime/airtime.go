@@ -27,6 +27,7 @@ func (service Service) Send(phoneNumber, amount string) (*Response, error) {
 	values := url.Values{}
 	values.Set("username", service.Username)
 	values.Set("phoneNumber", phoneNumber)
+	values.Set("currencyCode", "KES")
 	values.Set("amount", amount)
 
 	smsURL := util.GetAirtimeURL(service.Env)
@@ -40,7 +41,7 @@ func (service Service) Send(phoneNumber, amount string) (*Response, error) {
 	defer res.Body.Close()
 	var response Response
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
-		return nil, errors.New("unable to parse sms response")
+		return nil, errors.New("unable to parse airtime response")
 	}
 	return &response, nil
 }
