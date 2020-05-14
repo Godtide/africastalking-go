@@ -1,7 +1,7 @@
 package airtime
 
-// Response is the response from the api
-type Response struct {
+// AirtimeResponse is the response from the api
+type AirtimeResponse struct {
 	NumSent       int     `json:"numSent"`
 	TotalAmount   string  `json:"totalAmount"`
 	TotalDiscount string  `json:"totalDiscount"`
