@@ -3,9 +3,12 @@ package airtime
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"time"
 	"github.com/AndroidStudyOpenSource/africastalking-go/util"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
+	"time"
 )
 
 // Response is the reponse from the api
@@ -65,4 +68,23 @@ func (service Service) Send() (*Response, error) {
 	var airtimeResponse Response
 	json.NewDecoder(response.Body).Decode(&airtimeResponse)
 	return &airtimeResponse, nil
+}
+
+func (service Service) newPostRequest(url string, values url.Values, headers map[string]string) (*http.Response, error) {
+	reader := strings.NewReader(values.Encode())
+
+	req, err := http.NewRequest(http.MethodPost, url, reader)
+	if err != nil {
+		return nil, err
+	}
+
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+	req.Header.Set("Content-Length", strconv.Itoa(reader.Len()))
+	req.Header.Set("apikey", service.APIKey)
+	req.Header.Set("Accept", "application/json")
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	return client.Do(req)
 }
