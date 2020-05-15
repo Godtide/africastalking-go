@@ -23,12 +23,10 @@ func NewService(username, apiKey, env string) Service {
 	return Service{username, apiKey, env}
 }
 
-func (service Service) Send(phoneNumber, amount string) (*Response, error) {
+func (service Service) Send(phoneNumber, amount string) (*AirtimeResponse, error) {
 	values := url.Values{}
 	values.Set("username", service.Username)
-	values.Set("phoneNumber", phoneNumber)
-	values.Set("currencyCode", "KES")
-	values.Set("amount", amount)
+	values.Set("recipients", phoneNumber)
 
 	smsURL := util.GetAirtimeURL(service.Env)
 	headers := make(map[string]string)
@@ -39,7 +37,7 @@ func (service Service) Send(phoneNumber, amount string) (*Response, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
-	var response Response
+	var response AirtimeResponse
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		return nil, errors.New("unable to parse airtime response")
 	}
